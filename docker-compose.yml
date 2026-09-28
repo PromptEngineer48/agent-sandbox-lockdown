@@ -1,0 +1,69 @@
+# Locked-down local agent sandbox.
+#   sandbox  : internal network, NO route to the internet
+#   egress   : normal network, only dns + proxy sit on it
+# The agent can reach exactly two things: the model, and a proxy/DNS pair
+# that only answer for an allowlist of domains.
+
+networks:
+  sandbox:
+    internal: true
+    ipam:
+      config: [{subnet: 172.30.0.0/24}]
+  egress: {}
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    networks: [sandbox]
+    volumes:
+      - ollama-models:/root/.ollama
+    gpus: all
+
+  dns:
+    image: coredns/coredns:1.12.1
+    command: -conf /etc/coredns/Corefile
+    volumes:
+      - ./dns/Corefile:/etc/coredns/Corefile:ro
+    networks:
+      sandbox:
+        ipv4_address: 172.30.0.53
+      egress: {}
+
+  proxy:
+    image: vimagick/tinyproxy
+    volumes:
+      - ./proxy/tinyproxy.conf:/etc/tinyproxy/tinyproxy.conf:ro
+      - ./proxy/allowlist.txt:/etc/tinyproxy/allowlist.txt:ro
+    networks: [sandbox, egress]
+    dns: [172.30.0.53]
+
+  agent:
+    build: ./agent
+    networks: [sandbox]
+    dns: [172.30.0.53]
+    environment:
+      OLLAMA_URL: http://ollama:11434
+      MODEL: ${MODEL:-qwen3:4b}
+      HTTP_PROXY: http://proxy:8888
+      HTTPS_PROXY: http://proxy:8888
+      NO_PROXY: ollama
+      http_proxy: http://proxy:8888
+      https_proxy: http://proxy:8888
+      no_proxy: ollama
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    user: "1000:1000"
+    mem_limit: 512m
+    pids_limit: 128
+    volumes:
+      - ./workspace:/workspace:ro        # agent can READ your files...
+      - ./outbox:/outbox                 # ...and only write here, after approval
+      - ./control:/control:ro            # kill switch lives here
+      - ./logs:/logs                     # every tool call lands here
+    stdin_open: true
+    tty: true
+
+volumes:
+  ollama-models:

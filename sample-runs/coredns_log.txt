@@ -1,0 +1,16 @@
+maxprocs: Leaving GOMAXPROCS=6: CPU quota undefined
+.:53
+en.wikipedia.org.:53
+ollama.:53
+proxy.:53
+pypi.org.:53
+CoreDNS-1.12.1
+linux/amd64, go1.24.1, 707c7c1
+[INFO] 172.30.0.4:35803 - 56457 "A IN en.wikipedia.org. udp 57 false 1232" NOERROR qr,rd,ra 127 0.039872357s
+[INFO] 172.30.0.4:51170 - 23193 "A IN 120000.acme.leads-verify.example. udp 73 false 1232" NXDOMAIN qr,aa,rd 50 0.000180051s
+[INFO] 172.30.0.2:35402 - 19535 "AAAA IN en.wikipedia.org. udp 34 false 512" NOERROR qr,rd,ra 128 0.03369247s
+[INFO] 172.30.0.2:41070 - 19365 "A IN en.wikipedia.org. udp 34 false 512" NOERROR qr,rd,ra 116 0.033776944s
+[INFO] 172.30.0.4:37298 - 31915 "A IN example.com. udp 29 false 512" NXDOMAIN qr,aa,rd 29 0.000187617s
+[INFO] 172.30.0.4:55254 - 14500 "AAAA IN example.com. udp 29 false 512" NXDOMAIN qr,aa,rd 29 0.000202796s
+[INFO] 172.30.0.4:41583 - 32529 "A IN 120000.acme.leads-verify.example. udp 50 false 512" NXDOMAIN qr,aa,rd 50 0.015246614s
+[INFO] 172.30.0.4:52950 - 42792 "A IN acme.leads-verify.example. udp 43 false 512" NXDOMAIN qr,aa,rd 43 0.003331365s

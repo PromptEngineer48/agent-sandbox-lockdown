@@ -1,0 +1,4 @@
+ Container demo-agent-run-358b01c78233 Creating 
+ Container demo-agent-run-358b01c78233 Created 
+[TASK] List the workspace files.
+[KILL] kill switch is set - stopping now

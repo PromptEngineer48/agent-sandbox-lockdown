@@ -1,0 +1,23 @@
+# DNS allowlist: only these names are ever resolved.
+# Everything else gets NXDOMAIN and is NEVER forwarded, so a
+# lookup like  <secret>.attacker.example  dies right here.
+
+# 1) the few public domains the agent is allowed to use
+en.wikipedia.org pypi.org {
+    forward . 1.1.1.1
+    log
+}
+
+# 2) container names inside the sandbox (model + proxy)
+ollama proxy {
+    forward . 127.0.0.11
+    log
+}
+
+# 3) everything else: refuse, and log it so we can see the attempt
+. {
+    template ANY ANY {
+        rcode NXDOMAIN
+    }
+    log
+}

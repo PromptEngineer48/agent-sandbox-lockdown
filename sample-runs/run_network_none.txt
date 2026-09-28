@@ -1,0 +1,4 @@
+$ docker run --rm --network none --entrypoint sh demo-agent -c "curl -sS -m5 https://example.com; nslookup example.com"
+curl: (6) Could not resolve host: example.com
+;; UDP setup with 192.168.65.7#53(192.168.65.7) for example.com failed: network unreachable.
+;; no servers could be reached
